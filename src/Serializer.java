@@ -1,7 +1,9 @@
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.OptionalInt;
+import java.util.stream.Collectors;
+
 import org.jdom2.Document;
 import org.jdom2.Element;
 
@@ -20,6 +22,7 @@ public class Serializer {
 
         while (!queue.isEmpty()) {
             Element objElement = new Element("object");
+            root.addContent(objElement);
 
             IdentifiedObject nextObj = queue.remove(0);
             this.obj = nextObj.obj;
@@ -29,8 +32,25 @@ public class Serializer {
             objElement.setAttribute("class", cls.getName());
             objElement.setAttribute("id", Integer.toString(id));
 
+            ArrayList<Field> fields = new ArrayList<>();
+            Class current = cls;
+            while (current.getSuperclass() != null) {
+                fields.addAll(Arrays.stream(current.getDeclaredFields()).filter(f -> !Modifier.isStatic(f.getModifiers())).collect(Collectors.toList()));
+                current = current.getSuperclass();
+            }
+            fields.forEach(f -> f.setAccessible(true));
 
-            root.addContent(objElement);
+            for (Field f : fields) {
+                Element fieldElement = new Element("field");
+                objElement.addContent(fieldElement);
+
+                fieldElement.setAttribute("name", f.getName());
+                fieldElement.setAttribute("declaringclass", f.getDeclaringClass().getName());
+
+
+            }
+
+
         }
 
         return document;
