@@ -47,6 +47,19 @@ public class Serializer {
                 fieldElement.setAttribute("name", f.getName());
                 fieldElement.setAttribute("declaringclass", f.getDeclaringClass().getName());
 
+                Class fieldCls = f.getType();
+                if (isPrimitiveOrWrapper(fieldCls)) {
+                    try {
+                        Object value = f.get(obj);
+                        if (value.getClass().equals(Character.class) && (value.equals('\u0000')))
+                            value = "null";
+                        fieldElement.addContent(new Element("value").setText(value.toString()));
+                    } catch (IllegalAccessException e) { }
+                } else if (fieldCls.isArray()) {
+
+                } else {
+
+                }
 
             }
 
@@ -82,6 +95,17 @@ public class Serializer {
             this.id = id;
             this.obj = obj;
         }
+    }
+
+    /**
+     * Checks if a Class object is of primitive or wrapped primitive types
+     * @param type Class object to check
+     * @return boolean value representing if class object is of primitive type
+     */
+    private boolean isPrimitiveOrWrapper(Class<?> type) {
+        return type.isPrimitive() || (type == Double.class || type == Float.class || type == Long.class ||
+                type == Integer.class || type == Short.class || type == Character.class ||
+                type == Byte.class || type == Boolean.class);
     }
 
 }
