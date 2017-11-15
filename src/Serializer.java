@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.*;
@@ -31,43 +32,66 @@ public class Serializer {
             Class cls = this.obj.getClass();
             objElement.setAttribute("class", cls.getName());
             objElement.setAttribute("id", Integer.toString(id));
-
-            ArrayList<Field> fields = new ArrayList<>();
-            Class current = cls;
-            while (current.getSuperclass() != null) {
-                fields.addAll(Arrays.stream(current.getDeclaredFields()).filter(f -> !Modifier.isStatic(f.getModifiers())).collect(Collectors.toList()));
-                current = current.getSuperclass();
+            int arrayLen = 0;
+            if (cls.isArray()) {
+                arrayLen = Array.getLength(this.obj);
+                objElement.setAttribute("length", Integer.toString(arrayLen));
             }
-            fields.forEach(f -> f.setAccessible(true));
 
-            for (Field f : fields) {
-                Element fieldElement = new Element("field");
-
-                fieldElement.setAttribute("name", f.getName());
-                fieldElement.setAttribute("declaringclass", f.getDeclaringClass().getName());
-
-                Class fieldCls = f.getType();
-                if (fieldCls.isPrimitive()) {
-                    try {
-                        Object value = f.get(obj);
+            if (cls.isArray()) {
+                Class componentType = cls.getComponentType();
+                if (componentType.isPrimitive()) {
+                    for (int i = 0; i < arrayLen; i++) {
+                        Object value = Array.get(this.obj, i);
                         if (value.getClass().equals(Character.class) && (value.equals('\u0000')))
                             value = 0;
-                        fieldElement.addContent(new Element("value").setText(value.toString()));
-                        objElement.addContent(fieldElement);
-                    } catch (IllegalAccessException e) { }
-                } else if (fieldCls.isArray()) {
-
+                        objElement.addContent(new Element("value").setText(value.toString()));
+                    }
                 } else {
-                    try {
-                        Object value = f.get(obj);
+                    for (int i = 0; i < arrayLen; i++) {
+                        Object value = Array.get(this.obj, i);
                         if (value != null) {
-                            int fieldObjId = processObject(f.get(obj));
-                            fieldElement.addContent(new Element("reference").setText(Integer.toString(fieldObjId)));
-                            objElement.addContent(fieldElement);
+                            int fieldObjId = processObject(value);
+                            objElement.addContent(new Element("reference").setText(Integer.toString(fieldObjId)));
                         }
-                    } catch (IllegalAccessException e) { }
+                    }
                 }
+            } else {
+                ArrayList<Field> fields = new ArrayList<>();
+                Class current = cls;
+                while (current.getSuperclass() != null) {
+                    fields.addAll(Arrays.stream(current.getDeclaredFields()).filter(f -> !Modifier.isStatic(f.getModifiers())).collect(Collectors.toList()));
+                    current = current.getSuperclass();
+                }
+                fields.forEach(f -> f.setAccessible(true));
 
+                for (Field f : fields) {
+                    Element fieldElement = new Element("field");
+
+                    fieldElement.setAttribute("name", f.getName());
+                    fieldElement.setAttribute("declaringclass", f.getDeclaringClass().getName());
+
+                    Class fieldCls = f.getType();
+                    if (fieldCls.isPrimitive()) {
+                        try {
+                            Object value = f.get(obj);
+                            if (value.getClass().equals(Character.class) && (value.equals('\u0000')))
+                                value = 0;
+                            fieldElement.addContent(new Element("value").setText(value.toString()));
+                            objElement.addContent(fieldElement);
+                        } catch (IllegalAccessException e) { }
+                    } else {
+                        try {
+                            Object value = f.get(obj);
+                            if (value != null) {
+                                int fieldObjId = processObject(f.get(obj));
+                                fieldElement.addContent(new Element("reference").setText(Integer.toString(fieldObjId)));
+                                objElement.addContent(fieldElement);
+                            }
+                        } catch (IllegalAccessException e) { }
+                    }
+
+                }
             }
 
 
@@ -103,16 +127,5 @@ public class Serializer {
             this.obj = obj;
         }
     }
-
-//    /**
-//     * Checks if a Class object is of primitive or wrapped primitive types
-//     * @param type Class object to check
-//     * @return boolean value representing if class object is of primitive type
-//     */
-//    private boolean isPrimitiveOrWrapper(Class<?> type) {
-//        return type.isPrimitive() || (type == Double.class || type == Float.class || type == Long.class ||
-//                type == Integer.class || type == Short.class || type == Character.class ||
-//                type == Byte.class || type == Boolean.class);
-//    }
 
 }
