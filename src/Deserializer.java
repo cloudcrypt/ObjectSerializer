@@ -29,14 +29,13 @@ public class Deserializer {
 
                 } else {
 
-                    // check if objCls is Integer.class or similar, and if so, get the constructor with
-                    // that argument, since no "no arg constructor" seems to exist.
-                    // ex: Integer.class.getDeclaredConstructor(new Class[] {int.class});
-                    // ex: Character.class.getDeclaredConstructor(new Class[] {char.class});
-                    // etc.
-                    Constructor c = objCls.getDeclaredConstructor(new Class[] {});
-                    c.setAccessible(true);
-                    obj = c.newInstance(new Object[] {});
+
+                    if ((obj = getWrappedObject(objCls)) == null) {
+                        Constructor c;
+                        c = objCls.getDeclaredConstructor(new Class[]{});
+                        c.setAccessible(true);
+                        obj = c.newInstance(new Object[]{});
+                    }
 
                 }
 
@@ -62,6 +61,24 @@ public class Deserializer {
                     // iterate through each element of the array
                         // set the element's value using Array.set()
                         // as below, treat primitives differently than references
+                    Class componentType = objCls.getComponentType();
+                    int len = objElement.getAttribute("length").getIntValue();
+
+                    if (componentType.isPrimitive()) {
+                        List<Element> entryElements = objElement.getChildren();
+                        int i = 0;
+                        for (Element entryElement : entryElements) {
+                            Array.set(obj, i, stringToPrimitive(entryElement.getText(), componentType));
+                            i++;
+                        }
+                    } else {
+                        List<Element> entryElements = objElement.getChildren();
+                        int i = 0;
+                        for (Element entryElement : entryElements) {
+                            Array.set(obj, i, objects.get(Integer.parseInt(entryElement.getText())));
+                            i++;
+                        }
+                    }
 
                 } else {
 
@@ -85,7 +102,9 @@ public class Deserializer {
 
                 }
 
-            } catch (Exception e) { }
+            } catch (Exception e) {
+                System.out.println();
+            }
         }
 
         return objects.get(0);
@@ -108,6 +127,39 @@ public class Deserializer {
             return Long.parseLong(str);
         } else if (primitiveType.equals(double.class)) {
             return Double.parseDouble(str);
+        } else {
+            return null;
+        }
+    }
+
+    private Object getWrappedObject(Class cls) throws Exception {
+        if (cls.equals(Integer.class)) {
+            Constructor c = cls.getDeclaredConstructor(int.class);
+            return c.newInstance(0);
+        } else if (cls.equals(Character.class)) {
+            Constructor c = cls.getDeclaredConstructor(char.class);
+            char prim = 0;
+            return c.newInstance(prim);
+        } else if (cls.equals(Float.class)) {
+            Constructor c = cls.getDeclaredConstructor(float.class);
+            return c.newInstance(0);
+        } else if (cls.equals(Boolean.class)) {
+            Constructor c = cls.getDeclaredConstructor(boolean.class);
+            return c.newInstance(false);
+        } else if (cls.equals(Byte.class)) {
+            Constructor c = cls.getDeclaredConstructor(byte.class);
+            byte prim = 0;
+            return c.newInstance(prim);
+        } else if (cls.equals(Short.class)) {
+            Constructor c = cls.getDeclaredConstructor(short.class);
+            short prim = 0;
+            return c.newInstance(prim);
+        } else if (cls.equals(Long.class)) {
+            Constructor c = cls.getDeclaredConstructor(long.class);
+            return c.newInstance(0);
+        } else if (cls.equals(Double.class)) {
+            Constructor c = cls.getDeclaredConstructor(double.class);
+            return c.newInstance(0);
         } else {
             return null;
         }
