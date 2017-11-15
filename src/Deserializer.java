@@ -1,3 +1,4 @@
+import org.jdom2.DataConversionException;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
@@ -102,7 +103,7 @@ public class Deserializer {
 
                 }
 
-            } catch (Exception e) {
+            } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | DataConversionException e) {
                 System.out.println();
             }
         }
@@ -114,7 +115,7 @@ public class Deserializer {
         if (primitiveType.equals(int.class)) {
             return Integer.parseInt(str);
         } else if (primitiveType.equals(char.class)) {
-            return str.charAt(0);
+            return (str.length() == 0) ? ' ' : str.charAt(0);
         } else if (primitiveType.equals(float.class)) {
             return Float.parseFloat(str);
         } else if (primitiveType.equals(boolean.class)) {
