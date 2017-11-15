@@ -74,7 +74,7 @@ public class Serializer {
                     Class fieldCls = f.getType();
                     if (fieldCls.isPrimitive()) {
                         try {
-                            Object value = f.get(obj);
+                            Object value = f.get(this.obj);
                             if (value.getClass().equals(Character.class) && (value.equals('\u0000')))
                                 value = 0;
                             fieldElement.addContent(new Element("value").setText(value.toString()));
@@ -82,9 +82,9 @@ public class Serializer {
                         } catch (IllegalAccessException e) { }
                     } else {
                         try {
-                            Object value = f.get(obj);
+                            Object value = f.get(this.obj);
                             if (value != null) {
-                                int fieldObjId = processObject(f.get(obj));
+                                int fieldObjId = processObject(value);
                                 fieldElement.addContent(new Element("reference").setText(Integer.toString(fieldObjId)));
                                 objElement.addContent(fieldElement);
                             }
@@ -111,7 +111,7 @@ public class Serializer {
         } else {
             OptionalInt maxInt = objects.keySet().stream().mapToInt(Integer::intValue).max();
             if (maxInt.isPresent()) {
-                id = maxInt.getAsInt();
+                id = maxInt.getAsInt() + 1;
             }
             objects.put(id, obj);
             queue.add(new IdentifiedObject(id, obj));
