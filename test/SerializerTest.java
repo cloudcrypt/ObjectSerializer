@@ -32,9 +32,12 @@ public class SerializerTest {
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                         "<serialized>\n" +
                         "  <object class=\"TestClasses.TestClass2\" id=\"0\">\n" +
-                        "    <field name=\"field1\" declaringclass=\"TestClasses.TestClass2\" />\n" +
-                        "    <field name=\"field2\" declaringclass=\"TestClasses.TestClass2\" />\n" +
-                        "    <field name=\"field3\" declaringclass=\"TestClasses.TestClass2\" />\n" +
+                        "    <field name=\"field1\" declaringclass=\"TestClasses.TestClass2\">\n" +
+                        "      <value>0</value>\n" +
+                        "    </field>\n" +
+                        "    <field name=\"field3\" declaringclass=\"TestClasses.TestClass2\">\n" +
+                        "      <value>0</value>\n" +
+                        "    </field>\n" +
                         "  </object>\n" +
                         "</serialized>\n";
         assertEquals(str.replace("\r\n", "\n"), expected.replace("\r\n", "\n"));
@@ -50,13 +53,21 @@ public class SerializerTest {
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
                         "<serialized>\n" +
                         "  <object class=\"TestClasses.TestClass3\" id=\"0\">\n" +
-                        "    <field name=\"field1\" declaringclass=\"TestClasses.TestClass3\" />\n" +
-                        "    <field name=\"field2\" declaringclass=\"TestClasses.TestClass3\" />\n" +
-                        "    <field name=\"field3\" declaringclass=\"TestClasses.TestClass3\" />\n" +
-                        "    <field name=\"field5\" declaringclass=\"TestClasses.TestClass3\" />\n" +
-                        "    <field name=\"field5\" declaringclass=\"TestClasses.TestClass4\" />\n" +
-                        "    <field name=\"field6\" declaringclass=\"TestClasses.TestClass4\" />\n" +
-                        "    <field name=\"field7\" declaringclass=\"TestClasses.TestClass4\" />\n" +
+                        "    <field name=\"field1\" declaringclass=\"TestClasses.TestClass3\">\n" +
+                        "      <value>0</value>\n" +
+                        "    </field>\n" +
+                        "    <field name=\"field3\" declaringclass=\"TestClasses.TestClass3\">\n" +
+                        "      <value>0</value>\n" +
+                        "    </field>\n" +
+                        "    <field name=\"field5\" declaringclass=\"TestClasses.TestClass3\">\n" +
+                        "      <value>0</value>\n" +
+                        "    </field>\n" +
+                        "    <field name=\"field5\" declaringclass=\"TestClasses.TestClass4\">\n" +
+                        "      <value>0</value>\n" +
+                        "    </field>\n" +
+                        "    <field name=\"field7\" declaringclass=\"TestClasses.TestClass4\">\n" +
+                        "      <value>0</value>\n" +
+                        "    </field>\n" +
                         "  </object>\n" +
                         "</serialized>\n";
         assertEquals(str.replace("\r\n", "\n"), expected.replace("\r\n", "\n"));

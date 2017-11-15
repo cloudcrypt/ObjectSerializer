@@ -42,23 +42,30 @@ public class Serializer {
 
             for (Field f : fields) {
                 Element fieldElement = new Element("field");
-                objElement.addContent(fieldElement);
 
                 fieldElement.setAttribute("name", f.getName());
                 fieldElement.setAttribute("declaringclass", f.getDeclaringClass().getName());
 
                 Class fieldCls = f.getType();
-                if (isPrimitiveOrWrapper(fieldCls)) {
+                if (fieldCls.isPrimitive()) {
                     try {
                         Object value = f.get(obj);
                         if (value.getClass().equals(Character.class) && (value.equals('\u0000')))
-                            value = "null";
+                            value = 0;
                         fieldElement.addContent(new Element("value").setText(value.toString()));
+                        objElement.addContent(fieldElement);
                     } catch (IllegalAccessException e) { }
                 } else if (fieldCls.isArray()) {
 
                 } else {
-
+                    try {
+                        Object value = f.get(obj);
+                        if (value != null) {
+                            int fieldObjId = processObject(f.get(obj));
+                            fieldElement.addContent(new Element("reference").setText(Integer.toString(fieldObjId)));
+                            objElement.addContent(fieldElement);
+                        }
+                    } catch (IllegalAccessException e) { }
                 }
 
             }
@@ -97,15 +104,15 @@ public class Serializer {
         }
     }
 
-    /**
-     * Checks if a Class object is of primitive or wrapped primitive types
-     * @param type Class object to check
-     * @return boolean value representing if class object is of primitive type
-     */
-    private boolean isPrimitiveOrWrapper(Class<?> type) {
-        return type.isPrimitive() || (type == Double.class || type == Float.class || type == Long.class ||
-                type == Integer.class || type == Short.class || type == Character.class ||
-                type == Byte.class || type == Boolean.class);
-    }
+//    /**
+//     * Checks if a Class object is of primitive or wrapped primitive types
+//     * @param type Class object to check
+//     * @return boolean value representing if class object is of primitive type
+//     */
+//    private boolean isPrimitiveOrWrapper(Class<?> type) {
+//        return type.isPrimitive() || (type == Double.class || type == Float.class || type == Long.class ||
+//                type == Integer.class || type == Short.class || type == Character.class ||
+//                type == Byte.class || type == Boolean.class);
+//    }
 
 }
