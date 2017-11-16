@@ -1,3 +1,9 @@
+/*
+ *  
+ *  
+ * Daniel Dastoor
+ */
+
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
@@ -6,6 +12,11 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * The Receiver class converts incoming byte streams into a JDOM document, deserializes
+ * them into objects, and displays the objects to standard output.
+ * @author Daniel Dastoor
+ */
 public class Receiver {
 
     public static void main(String[] args) {

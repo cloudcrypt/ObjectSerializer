@@ -1,3 +1,9 @@
+/*
+ *  
+ *  
+ * Daniel Dastoor
+ */
+
 import org.jdom2.DataConversionException;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -8,10 +14,20 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The Deserializer class deserializes an XML document, returning the reconstituted
+ * object.
+ * @author Daniel Dastoor
+ */
 public class Deserializer {
 
     private HashMap<Integer, Object> objects = new HashMap<>();
 
+    /**
+     * Deserializes an XML document into an object
+     * @param document XML document to deserialize
+     * @return Reconstituted object
+     */
     public Object deserialize(Document document) {
         Element rootElement = document.getRootElement();
         List<Element> objElements = rootElement.getChildren();
@@ -54,10 +70,10 @@ public class Deserializer {
 
                 if (objCls.isArray()) {
 
-                    // find the element type with getComponentType()
-                    // iterate through each element of the array
-                        // set the element's value using Array.set()
-                        // as below, treat primitives differently than references
+                    // Find the element type.
+                    // Then iterate through each element of the array.
+                    // Then set the element's value.
+
                     Class componentType = objCls.getComponentType();
                     int len = objElement.getAttribute("length").getIntValue();
 
@@ -105,6 +121,12 @@ public class Deserializer {
         return objects.get(0);
     }
 
+    /**
+     * Converts a string to a specified primitive object type
+     * @param str String to convert
+     * @param primitiveType Primitive type to convert string to
+     * @return Converted primitive object
+     */
     private Object stringToPrimitive(String str, Class primitiveType) {
         if (primitiveType.equals(int.class)) {
             return Integer.parseInt(str);
@@ -127,6 +149,12 @@ public class Deserializer {
         }
     }
 
+    /**
+     * Gets a default wrapped object of a specific type
+     * @param cls Type of which to get wrapped object
+     * @return Wrapped Object
+     * @throws Exception
+     */
     private Object getWrappedObject(Class cls) throws Exception {
         if (cls.equals(Integer.class)) {
             Constructor c = cls.getDeclaredConstructor(int.class);

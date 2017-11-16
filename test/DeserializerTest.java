@@ -1,3 +1,9 @@
+/*
+ *  
+ *  
+ * Daniel Dastoor
+ */
+
 import TestClasses.*;
 import org.jdom2.Document;
 import org.junit.jupiter.api.Test;
@@ -5,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Unit tests for the Deserializer.
+ */
 public class DeserializerTest {
 
     @Test

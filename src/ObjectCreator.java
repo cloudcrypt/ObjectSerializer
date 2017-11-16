@@ -1,3 +1,9 @@
+/*
+ *  
+ *  
+ * Daniel Dastoor
+ */
+
 import CreatableClasses.*;
 
 import java.lang.reflect.Array;
@@ -6,11 +12,20 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * The ObjectCreator allows a user to create arbitrary objects through a text-based
+ * menu system.
+ * @author Daniel Dastoor
+ */
 public class ObjectCreator {
 
     private Scanner input = new Scanner(System.in);
     private ArrayList<Object> objects = new ArrayList<>();
 
+    /**
+     * Gets a fully initialized object from the user's choice
+     * @return Object
+     */
     public Object getObject() {
         Object obj = getUserObject();
         objects.add(obj);
@@ -18,6 +33,9 @@ public class ObjectCreator {
         return obj;
     }
 
+    /**
+     * Displays a menu of the possible objects for creation.
+     */
     private void displayObjectMenu() {
         System.out.println("Creatable Objects:");
         System.out.println("\t1) Simple object (Primitive fields only)");
@@ -27,6 +45,10 @@ public class ObjectCreator {
         System.out.println("\t5) Object with collection class object");
     }
 
+    /**
+     * Gets the object based on the user's menu selection
+     * @return Object
+     */
     private Object getUserObject() {
         displayObjectMenu();
         int choice = 0;
@@ -54,6 +76,11 @@ public class ObjectCreator {
         return null;
     }
 
+    /**
+     * Recursively allows the user to set the value of all fields in the object.
+     * Supports fields of primitive type, object type, array type, and ArrayList type.
+     * @param obj Object to set the fields in
+     */
     private void setFields(Object obj) {
         try {
             System.out.println("-----Setting fields for object " + System.identityHashCode(obj) + " (" + obj.getClass().getName() + ")-----");
@@ -99,6 +126,17 @@ public class ObjectCreator {
         } catch (IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) { }
     }
 
+    /**
+     * Creates a new object of a specific class type based on the user's selection.
+     * User can select from among all previously created objects of the class type, or
+     * create a new object of that type.
+     * @param cls Type of object to select or be created
+     * @return Selected or created object
+     * @throws NoSuchMethodException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
     private Object createObject(Class cls) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         System.out.println("-----Select/Create object of type " + cls.getName() + "-----");
         Object[] validObjects = objects.stream().filter(o -> o.getClass().equals(cls)).toArray();
@@ -116,6 +154,12 @@ public class ObjectCreator {
         return returnObj;
     }
 
+    /**
+     * Displays a menu for the user to select from a list of objects, or select to create
+     * a new object.
+     * @param objects Objects to display in list
+     * @return Integer menu choice number
+     */
     private int getSelectionFromObjects(Object[] objects) {
         int n = 0;
         for (Object validObject : objects) {
@@ -135,6 +179,16 @@ public class ObjectCreator {
         return choice;
     }
 
+    /**
+     * Creates a new object based on the user's selection.
+     * User can select from among all previously created objects, or
+     * create a new object from the possible object types.
+     * @return Selected or created object
+     * @throws NoSuchMethodException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
     private Object createObject() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         System.out.println("-----Select/Create object-----");
         Object[] validObjects = objects.toArray();
@@ -152,6 +206,12 @@ public class ObjectCreator {
         return returnObj;
     }
 
+    /**
+     * Converts a string to a specified primitive object type
+     * @param str String to convert
+     * @param primitiveType Primitive type to convert string to
+     * @return Converted primitive object
+     */
     private Object stringToPrimitive(String str, Class primitiveType) {
         if (primitiveType.equals(int.class)) {
             return Integer.parseInt(str);

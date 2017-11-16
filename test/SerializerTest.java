@@ -1,3 +1,9 @@
+/*
+ *  
+ *  
+ * Daniel Dastoor
+ */
+
 import TestClasses.*;
 import org.jdom2.Document;
 import org.jdom2.output.Format;
@@ -6,6 +12,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Unit tests for the Serializer.
+ */
 public class SerializerTest {
 
     @Test

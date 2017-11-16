@@ -1,3 +1,9 @@
+/*
+ *  
+ *  
+ * Daniel Dastoor
+ */
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -8,6 +14,10 @@ import java.util.stream.Collectors;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
+/**
+ * The Serializer class implements an object to XML Document serializer
+ * @author Daniel Dastoor
+ */
 public class Serializer {
 
     private IdentityHashMap<Integer, Object> objects = new IdentityHashMap<>();
@@ -16,6 +26,11 @@ public class Serializer {
 
     private Object obj;
 
+    /**
+     * Serialize serializes an object and all of its fields recursively
+     * @param obj Object to serialize
+     * @return XML Document of serialized object
+     */
     public org.jdom2.Document serialize(Object obj) {
         Element root = new Element("serialized");
         Document document = new Document(root);
@@ -92,17 +107,35 @@ public class Serializer {
         return document;
     }
 
+    /**
+     * Processes the value of a primitive object, and
+     * appropriately serializes it into a "value" element
+     * @param value Value object to process
+     * @param element Element to append value element to
+     */
     private void processPrimitiveEntry(Object value, Element element) {
         if (value.getClass().equals(Character.class) && (value.equals('\u0000')))
             value = 0;
         element.addContent(new Element("value").setText(value.toString()));
     }
 
+    /**
+     * Processes the value of an object, and
+     * appropriately serializes it into a "reference" element
+     * @param value Value object to process
+     * @param element Element to append reference element to
+     */
     private void processObjectEntry(Object value, Element element) {
         int fieldObjId = processObject(value);
         element.addContent(new Element("reference").setText(Integer.toString(fieldObjId)));
     }
 
+    /**
+     * Processes an object, getting it's ID if it has been serialized, and adding it to the
+     * serialization queue if not
+     * @param obj Object to process
+     * @return Assigned ID of object
+     */
     private int processObject(Object obj) {
         int id = 0;
         if (objects.containsValue(obj)) {
@@ -122,6 +155,9 @@ public class Serializer {
         return id;
     }
 
+    /**
+     * Simple class to handle ID/Object pairs.
+     */
     private class IdentifiedObject {
         int id;
         Object obj;

@@ -1,3 +1,9 @@
+/*
+ *  
+ *  
+ * Daniel Dastoor
+ */
+
 import org.jdom2.Document;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
@@ -7,6 +13,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
 
+/**
+ * The Sender class gets arbitrary created objects from the user, serializes them into
+ * a JDOM document, and sends the document as a stream of bytes over a socket connection.
+ * @author Daniel Dastoor
+ */
 public class Sender {
 
     public static void main(String[] args) {
