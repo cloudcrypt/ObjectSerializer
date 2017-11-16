@@ -18,7 +18,7 @@ public class ObjectCreator {
         return obj;
     }
 
-    private void display() {
+    private void displayObjectMenu() {
         System.out.println("Creatable Objects:");
         System.out.println("\t1) Simple object (Primitive fields only)");
         System.out.println("\t2) Object with object references");
@@ -28,7 +28,7 @@ public class ObjectCreator {
     }
 
     private Object getUserObject() {
-        display();
+        displayObjectMenu();
         int choice = 0;
         do {
             System.out.print("Selection: ");
