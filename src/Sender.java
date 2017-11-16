@@ -1,4 +1,3 @@
-import TestClasses.*;
 import org.jdom2.Document;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
@@ -18,24 +17,16 @@ public class Sender {
             OutputStream outputStream = socket.getOutputStream();
             DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
 
-            // get object from creator
-
-            TestClass5 obj = new TestClass5();
-
-            obj.field1 = 1234;
-            obj.field5 = new int[]{7, 7, 7};
-
-            TestClass7 testClass7 = new TestClass7();
-            testClass7.field15 = "Test Class 7 Test String";
-
-            obj.field14 = testClass7;
-
-            TestClass5 testClass5 = new TestClass5();
-            testClass5.field2 = "Test Class 5 Test String";
-
-            obj.field15 = testClass5;
+            System.out.println("****Connected to receiver\n");
 
             while (true) {
+                // Get object
+                System.out.println("Please create an object to transmit:\n");
+                Object obj = new ObjectCreator().getObject();
+
+                System.out.println("****Object created");
+                System.out.println("****Transmitting object");
+
                 // Serialize
                 Serializer serializer = new Serializer();
                 Document document = serializer.serialize(obj);
@@ -48,6 +39,8 @@ public class Sender {
                 dataOutputStream.flush();
                 dataOutputStream.write(data);
                 dataOutputStream.flush();
+
+                System.out.println("****Object transmitted\n");
 
             }
 

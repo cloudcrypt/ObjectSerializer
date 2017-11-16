@@ -11,21 +11,6 @@ public class Receiver {
     public static void main(String[] args) {
 
         try {
-//            TestClass5 obj = new TestClass5();
-//
-//            obj.field1 = 1234;
-//            obj.field5 = new int[]{7, 7, 7};
-//
-//            TestClass7 testClass7 = new TestClass7();
-//            testClass7.field15 = "Test Class 7 Test String";
-//
-//            obj.field14 = testClass7;
-//
-//            TestClass5 testClass5 = new TestClass5();
-//            testClass5.field2 = "Test Class 5 Test String";
-//
-//            obj.field15 = testClass5;
-
             ServerSocket serverSocket = new ServerSocket(7777);
             System.out.println("*****Waiting for connection");
             // Establish socket
