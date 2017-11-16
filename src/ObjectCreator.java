@@ -15,21 +15,21 @@ public class ObjectCreator {
 
         Object obj = getUserObject();
         objects.add(obj);
-        setFields(obj);
+        set(obj);
         return obj;
     }
 
-    private void displayObjectMenu() {
+    private void display() {
         System.out.println("Creatable Objects:");
         System.out.println("\t1) Simple object (Primitive fields only)");
         System.out.println("\t2) Object with object references");
         System.out.println("\t3) Object with arrays of primitives");
-        System.out.println("\t4) Object with array of object references");
+        System.out.println("\t4) Object with arrays of object references");
         System.out.println("\t5) Object with collection class object");
     }
 
     private Object getUserObject() {
-        displayObjectMenu();
+        display();
         int choice = 0;
         do {
             System.out.print("Selection: ");
@@ -49,11 +49,13 @@ public class ObjectCreator {
                 return new PrimitiveArrayClass();
             case 4:
                 return new ObjectArrayClass();
+            case 5:
+                return new CollectionReferenceClass();
         }
         return null;
     }
 
-    private void setFields(Object obj) {
+    private void set(Object obj) {
         try {
             System.out.println("-----Setting fields for object " + System.identityHashCode(obj) + " (" + obj.getClass().getName() + ")-----");
             Field[] fields = obj.getClass().getFields();
@@ -80,6 +82,15 @@ public class ObjectCreator {
                         }
                     }
                     field.set(obj, array);
+                } else if (fieldCls.equals(ArrayList.class)) {
+                    System.out.printf("Creating/Selecting %s object for field '%s':\n", fieldCls, field.getName());
+                    ArrayList<Object> arrayListObj = (ArrayList<Object>)createObject(fieldCls);
+                    for (int i = 0; i < 3; i++) {
+                        System.out.printf("Creating/Selecting object for index %d/3 of field '%s':\n", i+1, field.getName());
+                        Object arrayListEntry = createObject();
+                        arrayListObj.add(arrayListEntry);
+                    }
+                    field.set(obj, arrayListObj);
                 } else {
                     System.out.printf("Creating/Selecting %s object for field '%s':\n", fieldCls, field.getName());
                     field.set(obj, createObject(fieldCls));
@@ -113,12 +124,43 @@ public class ObjectCreator {
         if (choice == n) {
             Object fieldObj = cls.getDeclaredConstructor(new Class[] {}).newInstance(new Object[] {});
             objects.add(fieldObj);
-            setFields(fieldObj);
+            set(fieldObj);
             returnObj = fieldObj;
         } else {
             returnObj = validObjects[choice - 1];
         }
         System.out.println("-----Selected/Created object of type " + cls.getName() + "-----");
+        return returnObj;
+    }
+
+    private Object createObject() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        System.out.println("-----Select/Create object-----");
+        Object[] validObjects = objects.toArray();
+        Object returnObj;
+        int n = 0;
+        for (Object validObject : validObjects) {
+            System.out.printf("\t%d) %s (%s)\n", ++n, System.identityHashCode(validObject), validObject.getClass().getName());
+        }
+        System.out.printf("\t%d) Create new object\n", ++n);
+        int choice = 0;
+        do {
+            System.out.print("Selection: ");
+            while(!input.hasNextInt()) {
+                System.out.printf("Please enter a number between 1 and %d.\n", n);
+                input.next();
+            }
+            choice = input.nextInt();
+        } while ((choice < 1) || (choice > n));
+        input.nextLine();
+        if (choice == n) {
+            Object newObj = getUserObject();
+            objects.add(newObj);
+            set(newObj);
+            returnObj = newObj;
+        } else {
+            returnObj = validObjects[choice - 1];
+        }
+        System.out.println("-----Selected/Created object-----");
         return returnObj;
     }
 
