@@ -103,22 +103,8 @@ public class ObjectCreator {
         System.out.println("-----Select/Create object of type " + cls.getName() + "-----");
         Object[] validObjects = objects.stream().filter(o -> o.getClass().equals(cls)).toArray();
         Object returnObj;
-        int n = 0;
-        for (Object validObject : validObjects) {
-            System.out.printf("\t%d) %s (%s)\n", ++n, System.identityHashCode(validObject), validObject.getClass().getName());
-        }
-        System.out.printf("\t%d) Create new object\n", ++n);
-        int choice = 0;
-        do {
-            System.out.print("Selection: ");
-            while(!input.hasNextInt()) {
-                System.out.printf("Please enter a number between 1 and %d.\n", n);
-                input.next();
-            }
-            choice = input.nextInt();
-        } while ((choice < 1) || (choice > n));
-        input.nextLine();
-        if (choice == n) {
+        int choice = getSelectionFromObjects(validObjects);
+        if (choice == (validObjects.length + 1)) {
             Object fieldObj = cls.getDeclaredConstructor(new Class[] {}).newInstance(new Object[] {});
             objects.add(fieldObj);
             setFields(fieldObj);
@@ -130,12 +116,9 @@ public class ObjectCreator {
         return returnObj;
     }
 
-    private Object createObject() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        System.out.println("-----Select/Create object-----");
-        Object[] validObjects = objects.toArray();
-        Object returnObj;
+    private int getSelectionFromObjects(Object[] objects) {
         int n = 0;
-        for (Object validObject : validObjects) {
+        for (Object validObject : objects) {
             System.out.printf("\t%d) %s (%s)\n", ++n, System.identityHashCode(validObject), validObject.getClass().getName());
         }
         System.out.printf("\t%d) Create new object\n", ++n);
@@ -149,7 +132,15 @@ public class ObjectCreator {
             choice = input.nextInt();
         } while ((choice < 1) || (choice > n));
         input.nextLine();
-        if (choice == n) {
+        return choice;
+    }
+
+    private Object createObject() throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        System.out.println("-----Select/Create object-----");
+        Object[] validObjects = objects.toArray();
+        Object returnObj;
+        int choice = getSelectionFromObjects(validObjects);
+        if (choice == (validObjects.length + 1)) {
             Object newObj = getUserObject();
             objects.add(newObj);
             setFields(newObj);
