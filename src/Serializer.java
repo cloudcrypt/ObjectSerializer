@@ -49,8 +49,7 @@ public class Serializer {
                     for (int i = 0; i < arrayLen; i++) {
                         Object value = Array.get(this.obj, i);
                         if (value != null) {
-                            int fieldObjId = processObject(value);
-                            objElement.addContent(new Element("reference").setText(Integer.toString(fieldObjId)));
+                            processObjectEntry(value, objElement);
                         }
                     }
                 }
@@ -78,8 +77,7 @@ public class Serializer {
                         } else {
                             Object value = f.get(this.obj);
                             if (value != null) {
-                                int fieldObjId = processObject(value);
-                                fieldElement.addContent(new Element("reference").setText(Integer.toString(fieldObjId)));
+                                processObjectEntry(value, fieldElement);
                                 objElement.addContent(fieldElement);
                             }
                         }
@@ -98,6 +96,11 @@ public class Serializer {
         if (value.getClass().equals(Character.class) && (value.equals('\u0000')))
             value = 0;
         element.addContent(new Element("value").setText(value.toString()));
+    }
+
+    private void processObjectEntry(Object value, Element element) {
+        int fieldObjId = processObject(value);
+        element.addContent(new Element("reference").setText(Integer.toString(fieldObjId)));
     }
 
     private int processObject(Object obj) {
