@@ -14,7 +14,7 @@ public class ObjectCreator {
     public Object getObject() {
         Object obj = getUserObject();
         objects.add(obj);
-        set(obj);
+        setFields(obj);
         return obj;
     }
 
@@ -54,7 +54,7 @@ public class ObjectCreator {
         return null;
     }
 
-    private void set(Object obj) {
+    private void setFields(Object obj) {
         try {
             System.out.println("-----Setting fields for object " + System.identityHashCode(obj) + " (" + obj.getClass().getName() + ")-----");
             Field[] fields = obj.getClass().getFields();
@@ -121,7 +121,7 @@ public class ObjectCreator {
         if (choice == n) {
             Object fieldObj = cls.getDeclaredConstructor(new Class[] {}).newInstance(new Object[] {});
             objects.add(fieldObj);
-            set(fieldObj);
+            setFields(fieldObj);
             returnObj = fieldObj;
         } else {
             returnObj = validObjects[choice - 1];
@@ -152,7 +152,7 @@ public class ObjectCreator {
         if (choice == n) {
             Object newObj = getUserObject();
             objects.add(newObj);
-            set(newObj);
+            setFields(newObj);
             returnObj = newObj;
         } else {
             returnObj = validObjects[choice - 1];
