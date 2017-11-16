@@ -43,9 +43,7 @@ public class Serializer {
                 if (componentType.isPrimitive()) {
                     for (int i = 0; i < arrayLen; i++) {
                         Object value = Array.get(this.obj, i);
-                        if (value.getClass().equals(Character.class) && (value.equals('\u0000')))
-                            value = 0;
-                        objElement.addContent(new Element("value").setText(value.toString()));
+                        processPrimitiveEntry(value, objElement);
                     }
                 } else {
                     for (int i = 0; i < arrayLen; i++) {
@@ -72,24 +70,20 @@ public class Serializer {
                     fieldElement.setAttribute("declaringclass", f.getDeclaringClass().getName());
 
                     Class fieldCls = f.getType();
-                    if (fieldCls.isPrimitive()) {
-                        try {
+                    try {
+                        if (fieldCls.isPrimitive()) {
                             Object value = f.get(this.obj);
-                            if (value.getClass().equals(Character.class) && (value.equals('\u0000')))
-                                value = 0;
-                            fieldElement.addContent(new Element("value").setText(value.toString()));
+                            processPrimitiveEntry(value, fieldElement);
                             objElement.addContent(fieldElement);
-                        } catch (IllegalAccessException e) { }
-                    } else {
-                        try {
+                        } else {
                             Object value = f.get(this.obj);
                             if (value != null) {
                                 int fieldObjId = processObject(value);
                                 fieldElement.addContent(new Element("reference").setText(Integer.toString(fieldObjId)));
                                 objElement.addContent(fieldElement);
                             }
-                        } catch (IllegalAccessException e) { }
-                    }
+                        }
+                    } catch (IllegalAccessException e) { }
 
                 }
             }
@@ -98,6 +92,12 @@ public class Serializer {
         }
 
         return document;
+    }
+
+    private void processPrimitiveEntry(Object value, Element element) {
+        if (value.getClass().equals(Character.class) && (value.equals('\u0000')))
+            value = 0;
+        element.addContent(new Element("value").setText(value.toString()));
     }
 
     private int processObject(Object obj) {
