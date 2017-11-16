@@ -24,7 +24,7 @@ public class ObjectCreator {
         System.out.println("Creatable Objects:");
         System.out.println("\t1) Simple object (Primitive fields only)");
         System.out.println("\t2) Object with object references");
-        System.out.println("\t3) Object with array of primitives");
+        System.out.println("\t3) Object with arrays of primitives");
         System.out.println("\t4) Object with array of object references");
         System.out.println("\t5) Object with collection class object");
     }
@@ -46,6 +46,8 @@ public class ObjectCreator {
                 return new SimpleClass();
             case 2:
                 return new ObjReferenceClass();
+            case 3:
+                return new PrimitiveArrayClass();
 //            case 2:
 //
 //                break;
@@ -76,14 +78,14 @@ public class ObjectCreator {
                     Object array = Array.newInstance(componentType, 3);
                     if (componentType.isPrimitive()) {
                         for (int i = 0; i < 3; i++) {
-                            System.out.printf("Enter value for %s (Type: %s, Class: %s): ", field.getName(), fieldCls, field.getDeclaringClass().getName());
+                            System.out.printf("Enter value %d/3 for %s (Type: %s, Class: %s): ", i, field.getName(), fieldCls, field.getDeclaringClass().getName());
                             String arrayInput = input.nextLine();
-                            Array.set(obj, i, stringToPrimitive(arrayInput, componentType));
+                            Array.set(array, i, stringToPrimitive(arrayInput, componentType));
                         }
                     } else {
                         for (int i = 0; i < 3; i++) {
-                            System.out.printf("Creating/Selecting %s object for field '%s':\n", fieldCls, field.getName());
-                            Array.set(obj, i, createObject(fieldCls));
+                            System.out.printf("Creating/Selecting %s object for index %d/3 of field '%s':\n", fieldCls, i, field.getName());
+                            Array.set(array, i, createObject(fieldCls));
                         }
                     }
                     field.set(obj, array);
