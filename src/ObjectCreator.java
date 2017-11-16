@@ -5,7 +5,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.stream.Collectors;
 
 public class ObjectCreator {
 
@@ -48,16 +47,8 @@ public class ObjectCreator {
                 return new ObjReferenceClass();
             case 3:
                 return new PrimitiveArrayClass();
-//            case 2:
-//
-//                break;
-//
-//            case 3:
-//
-//                break;
-//            case 4:
-//
-//                break;
+            case 4:
+                return new ObjectArrayClass();
         }
         return null;
     }
@@ -78,14 +69,14 @@ public class ObjectCreator {
                     Object array = Array.newInstance(componentType, 3);
                     if (componentType.isPrimitive()) {
                         for (int i = 0; i < 3; i++) {
-                            System.out.printf("Enter value %d/3 for %s (Type: %s, Class: %s): ", i, field.getName(), fieldCls, field.getDeclaringClass().getName());
+                            System.out.printf("Enter value %d/3 for %s (Type: %s, Class: %s): ", i+1, field.getName(), componentType.getName(), field.getDeclaringClass().getName());
                             String arrayInput = input.nextLine();
                             Array.set(array, i, stringToPrimitive(arrayInput, componentType));
                         }
                     } else {
                         for (int i = 0; i < 3; i++) {
-                            System.out.printf("Creating/Selecting %s object for index %d/3 of field '%s':\n", fieldCls, i, field.getName());
-                            Array.set(array, i, createObject(fieldCls));
+                            System.out.printf("Creating/Selecting %s object for index %d/3 of field '%s':\n", componentType.getName(), i+1, field.getName());
+                            Array.set(array, i, createObject(componentType));
                         }
                     }
                     field.set(obj, array);
@@ -95,7 +86,9 @@ public class ObjectCreator {
                 }
             }
             System.out.println("--------------------------------------------------------");
-        } catch (IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) { }
+        } catch (IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
+            System.out.println();
+        }
     }
 
     private Object createObject(Class cls) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
