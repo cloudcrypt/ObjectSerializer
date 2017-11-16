@@ -2,7 +2,6 @@
  *  
  * Assignment #2
  * Daniel Dastoor
- *  
  */
 
 import java.lang.reflect.*;
@@ -11,7 +10,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 
 /**
- * The Inspector class implements a reflective object inspector that does a complete introspection
+ * The Inspector class implements a reflective object inspector that does a field introspection
  * of an object at runtime.
  * @author Daniel Dastoor
  */
@@ -60,26 +59,6 @@ public class Inspector {
             print("Inspecting object: %s %s\n", cls.getName(), System.identityHashCode(this.obj));
 
             print("Class: %s", cls.getName());
-//            print("Immediate Superclass: %s", cls.getSuperclass().getName());
-//
-//            print("Implemented Interfaces: ");
-//            indentAndExecute(1, () -> printNames(cls.getInterfaces()));
-
-//            print("Declared Constructors:");
-//            Constructor[] constructors = cls.getDeclaredConstructors();
-//            indentLevel++;
-//            if (!isEmpty(constructors)) {
-//                Arrays.stream(constructors).forEach(this::printConstructor);
-//            }
-//            indentLevel--;
-
-//            print("Declared Methods: ");
-//            Method[] methods = cls.getDeclaredMethods();
-//            indentLevel++;
-//            if (!isEmpty(methods)) {
-//                Arrays.stream(methods).forEach(this::printMethod);
-//            }
-//            indentLevel--;
 
             print("Declared Fields:");
             Field[] fields = cls.getDeclaredFields();
@@ -88,34 +67,6 @@ public class Inspector {
                 Arrays.stream(fields).forEach(this::printField);
             }
             indentLevel--;
-
-//            // Traverse the inheritance hierarchy to find all inherited constructors
-//            print("Inherited Constructors:");
-//            ArrayList<Constructor> inheritedConstructors = new ArrayList<>();
-//            Class superClass = cls.getSuperclass();
-//            while (superClass != null) {
-//                inheritedConstructors.addAll(Arrays.asList(superClass.getDeclaredConstructors()));
-//                superClass = superClass.getSuperclass();
-//            }
-//            indentLevel++;
-//            if (!isEmpty(inheritedConstructors)) {
-//                inheritedConstructors.forEach(this::printConstructor);
-//            }
-//            indentLevel--;
-
-//            // Traverse the inheritance hierarchy to find all inherited methods
-//            print("Inherited Methods:");
-//            ArrayList<Method> inheritedMethods = new ArrayList<>();
-//            superClass = cls.getSuperclass();
-//            while (superClass != null) {
-//                inheritedMethods.addAll(Arrays.asList(superClass.getDeclaredMethods()));
-//                superClass = superClass.getSuperclass();
-//            }
-//            indentLevel++;
-//            if (!isEmpty(inheritedMethods)) {
-//                inheritedMethods.forEach(this::printMethod);
-//            }
-//            indentLevel--;
 
             // Traverse the inheritance hierarchy to find all inherited fields
             print("Inherited Fields:");
@@ -131,65 +82,8 @@ public class Inspector {
             }
             indentLevel--;
 
-//            // Traverse the inheritance hierarchy of superclasses and superinterfaces
-//            // to find all inherited interfaces
-//            print("Inherited Interfaces:");
-//            ArrayList<Class> inheritedInterfaces = new ArrayList<>();
-//            ArrayList<Class> superInterfaces = new ArrayList<>();
-//            Class[] interfaces = cls.getInterfaces();
-//            for (Class i : interfaces) {
-//                superInterfaces.addAll(Arrays.asList(i.getInterfaces()));
-//            }
-//            superClass = cls.getSuperclass();
-//            while (superClass != null)  {
-//                superInterfaces.addAll(Arrays.asList(superClass.getInterfaces()));
-//                superClass = superClass.getSuperclass();
-//            }
-//            while (superInterfaces.size() > 0) {
-//                Class i = superInterfaces.remove(0);
-//                inheritedInterfaces.add(i);
-//                superInterfaces.addAll(Arrays.asList(i.getInterfaces()));
-//            }
-//            // Ensure list of inherited interfaces is unique to avoid duplicate listings
-//            HashSet<Class> uniqueInheritedInterfaces = new HashSet<>(inheritedInterfaces);
-//            indentAndExecute(1, () -> printNames(uniqueInheritedInterfaces.toArray(new Class[0])));
-
             System.out.println("---------------------------------------\n");
         }
-    }
-
-    /**
-     * Introspects and prints the details of a Constructor object
-     * @param c Constructor object to introspect
-     */
-    private void printConstructor(Constructor c) {
-        print("Constructor: %s", c.getName());
-
-        printSpecificIndent("Modifiers:", indentLevel+1);
-        printSpecificIndent(Modifier.toString(c.getModifiers()), indentLevel+2);
-
-        printSpecificIndent("Parameter Types:", indentLevel+1);
-        indentAndExecute(2, () -> printNames(c.getParameterTypes()));
-    }
-
-    /**
-     * Introspects and prints the details of a Method object
-     * @param m Method object to introspect
-     */
-    private void printMethod(Method m) {
-        print("Method: %s, Declared in %s", m.getName(), m.getDeclaringClass().getName());
-
-        printSpecificIndent("Modifiers: ", indentLevel+1);
-        printSpecificIndent(Modifier.toString(m.getModifiers()), indentLevel+2);
-
-        printSpecificIndent("Return Type: ", indentLevel+1);
-        indentAndExecute(2, () -> printType(m.getReturnType()));
-
-        printSpecificIndent("Parameter Types: ", indentLevel+1);
-        indentAndExecute(2, () -> printNames(m.getParameterTypes()));
-
-        printSpecificIndent("Exceptions Thrown: ", indentLevel+1);
-        indentAndExecute(2, () -> printNames(m.getExceptionTypes()));
     }
 
     /**
@@ -263,18 +157,6 @@ public class Inspector {
     }
 
     /**
-     * Prints the type of a Class object, taking care of array types
-     * @param type Class object to print the type of
-     */
-    private void printType(Class type) {
-        if (!type.isArray()) {
-            print(type.getName());
-        } else {
-            print("Array of type %s", type.getComponentType().getName());
-        }
-    }
-
-    /**
      * Checks if a Class object is of primitive or wrapped primitive types
      * @param type Class object to check
      * @return boolean value representing if class object is of primitive type
@@ -283,17 +165,6 @@ public class Inspector {
         return type.isPrimitive() || (type == Double.class || type == Float.class || type == Long.class ||
                 type == Integer.class || type == Short.class || type == Character.class ||
                 type == Byte.class || type == Boolean.class);
-    }
-
-    /**
-     * Executes printType on a list of Class objects, if the
-     * list is not empty
-     * @param list List of Class objects to print
-     */
-    private void printNames(Class[] list) {
-        if (!isEmpty(list)) {
-            Arrays.stream(list).forEach(this::printType);
-        }
     }
 
     /**

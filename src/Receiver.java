@@ -40,9 +40,7 @@ public class Receiver {
                 System.out.println("**********End of serialized object*************");
             }
 
-        } catch (IOException | JDOMException e) {
-            System.out.println();
-        }
+        } catch (IOException | JDOMException e) { }
     }
 
 }

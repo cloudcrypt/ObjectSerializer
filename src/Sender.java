@@ -44,9 +44,7 @@ public class Sender {
 
             }
 
-        } catch (IOException e) {
-            System.out.println();
-        }
+        } catch (IOException e) { }
     }
 
 }

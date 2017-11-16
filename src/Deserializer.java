@@ -54,10 +54,6 @@ public class Deserializer {
 
                 if (objCls.isArray()) {
 
-//                    Class componentType = objCls.getComponentType();
-//                    int length = objElement.getAttribute("length").getIntValue();
-//                    obj = Array.newInstance(componentType, length);
-
                     // find the element type with getComponentType()
                     // iterate through each element of the array
                         // set the element's value using Array.set()
@@ -103,9 +99,7 @@ public class Deserializer {
 
                 }
 
-            } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | DataConversionException e) {
-                System.out.println();
-            }
+            } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | DataConversionException e) { }
         }
 
         return objects.get(0);

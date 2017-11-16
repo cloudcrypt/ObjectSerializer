@@ -12,7 +12,6 @@ public class ObjectCreator {
     private ArrayList<Object> objects = new ArrayList<>();
 
     public Object getObject() {
-
         Object obj = getUserObject();
         objects.add(obj);
         set(obj);
@@ -97,9 +96,7 @@ public class ObjectCreator {
                 }
             }
             System.out.println("--------------------------------------------------------");
-        } catch (IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) {
-            System.out.println();
-        }
+        } catch (IllegalAccessException | NoSuchMethodException | InstantiationException | InvocationTargetException e) { }
     }
 
     private Object createObject(Class cls) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
