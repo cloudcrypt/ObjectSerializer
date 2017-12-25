@@ -1,6 +1,5 @@
 /*
- *  
- * Assignment #2
+ * Inspector
  * Daniel Dastoor
  */
 

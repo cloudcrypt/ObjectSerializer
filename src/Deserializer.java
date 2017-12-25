@@ -1,6 +1,5 @@
 /*
- *  
- *  
+ * Deserializer
  * Daniel Dastoor
  */
 

@@ -1,6 +1,5 @@
 /*
- *  
- *  
+ * Serializer
  * Daniel Dastoor
  */
 

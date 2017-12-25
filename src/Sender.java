@@ -1,6 +1,5 @@
 /*
- *  
- *  
+ * Sender
  * Daniel Dastoor
  */
 

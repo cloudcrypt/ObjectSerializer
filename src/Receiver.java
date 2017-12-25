@@ -1,6 +1,5 @@
 /*
- *  
- *  
+ * Receiver
  * Daniel Dastoor
  */
 

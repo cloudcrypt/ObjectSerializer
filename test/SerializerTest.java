@@ -1,6 +1,5 @@
 /*
- *  
- *  
+ * SerializerTest
  * Daniel Dastoor
  */
 
